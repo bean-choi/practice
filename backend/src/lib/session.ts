@@ -14,21 +14,26 @@ const COOKIE_OPTIONS: CookieOptions = {
   secure: env.NODE_ENV === "production",
   sameSite: env.NODE_ENV === "production" ? "strict" : "lax",
   maxAge: ms(JWT_TTL),
+  path: "/",
 };
 
 export function issueSession(res: Response, payload: SessionPayload) {
-  const token = jwt.sign({ sub: payload.userId }, env.JWT_SECRET, {
-    expiresIn: JWT_TTL,
-  });
+  const token = jwt.sign(
+    {},
+    env.JWT_SECRET,
+    {
+      subject: payload.userId,
+      expiresIn: JWT_TTL,
+    },
+  );
 
   res.cookie(env.COOKIE_NAME, token, COOKIE_OPTIONS);
-  return token;
 }
 
 export function clearSession(res: Response) {
   res.clearCookie(env.COOKIE_NAME, {
     ...COOKIE_OPTIONS,
-    maxAge: undefined,
+    maxAge: 0,
   });
 }
 

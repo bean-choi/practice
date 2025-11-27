@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { env } from "../config.ts";
 import { clearSession, decodeSession } from "../lib/session.ts";
+import { prisma } from "../lib/prisma.ts";
 
 const BEARER_PREFIX = "bearer ";
 
@@ -12,30 +13,58 @@ function getTokenFromAuthHeader(req: Request) {
     : null;
 }
 
-export function attachUser(req: Request, res: Response, next: NextFunction) {
+// Express.Request 타입 확장
+declare global {
+  namespace Express {
+    interface User {
+      id: string;
+      username: string;
+    }
+
+    interface Request {
+      user?: User;
+    }
+  }
+}
+
+function resetReqUser(req: Request) {
+  if ("user" in req) {
+    delete (req as any).user;
+  }
+}
+
+export async function attachUser(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies[env.COOKIE_NAME] ?? getTokenFromAuthHeader(req);
 
   if (!token) {
+    resetReqUser(req);  
     return next();
   }
 
-  // [실습1] Authentication
-  // TODO: 토큰을 디코딩하여 사용자 정보를 얻은 후 req.user에 저장합니다.
-  // 아래에 코드를 작성하세요.
   const session = decodeSession(token);
-
   if (!session) {
     clearSession(res);
+    resetReqUser(req);  
     return next();
   }
 
-  req.user = {
-    id: session.userId,
-  };
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { id: true, username: true },
+    });
 
-  // 위에 코드를 작성하세요.
+    if (!user) {
+      clearSession(res);
+      resetReqUser(req);
+      return next();
+    }
 
-  return next();
+    req.user = user;
+    return next();
+  } catch (err) {
+    return next(err);
+  }
 }
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {

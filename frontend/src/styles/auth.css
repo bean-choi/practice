@@ -1,0 +1,148 @@
+/* src/styles/auth.css */
+
+/* 공통 카드 스타일 */
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+}
+
+.auth-logo {
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-label {
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.auth-input {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #111827;
+  box-shadow: 0 0 0 1px #111827;
+}
+
+.auth-button {
+  margin-top: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 0;
+  background-color: #111827;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.auth-button:hover:not(:disabled) {
+  background-color: #1f2937;
+}
+
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.auth-error {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+.auth-footer {
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.auth-footer-text {
+  color: #6b7280;
+}
+
+.auth-footer-link {
+  color: #111827;
+  text-decoration: underline;
+}
+
+/* 로그인: 좌측 카드 + 우측 지도 */
+.auth-login-root {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;   /* 맵을 가로 가운데 정렬 */
+  align-items: center; 
+}
+
+.auth-login-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;  /* 클릭 방지 */
+}
+
+.auth-login-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  max-width: 1300px;
+  max-height: 1000px;
+}
+
+.auth-login-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.35); /* 살짝 하얀 필터 */
+  backdrop-filter: blur(2px);             /* 배경 흐림 효과(지원 브라우저에서만) */
+}
+
+.auth-login-center {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* 회원가입: 중앙 카드만 */
+.auth-signup-root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 24px;
+}

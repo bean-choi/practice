@@ -10,59 +10,60 @@ const s3 = new S3Client({
   },
 });
 
-const KEY_PREFIX = "gallery/";
 const MAX_UPLOAD_SIZE_BYTES = env.MAX_UPLOAD_SIZE_MB * 1024 * 1024;
 const PRESIGNED_URL_TTL = 300; // 5 minutes
 
-function toS3Key(key: string) {
-  return `${KEY_PREFIX}${key}`;
+export function buildPublicUrl(key: string) {
+  if (env.AWS_CLOUDFRONT_URL) {
+    const base = env.AWS_CLOUDFRONT_URL.replace(/\/$/, "");
+    return `${base}/${key}`;
+  }
+
+  return `https://${env.AWS_S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
 }
 
-export async function objectExists(key: string) {
+export async function objectExists(key: string): Promise<boolean> {
   try {
     await s3.send(
       new HeadObjectCommand({
         Bucket: env.AWS_S3_BUCKET,
-        Key: toS3Key(key),
+        Key: key,
       }),
     );
     return true;
-  } catch (err) {
-    if (err instanceof Error && err.name === "NotFound") {
+  } catch (err: any) {
+    if (err?.$metadata?.httpStatusCode === 404 || err?.name === "NotFound") {
       return false;
     }
     throw err;
   }
 }
 
-export function buildPublicUrl(key: string) {
-  const bucketUrl = env.AWS_CLOUDFRONT_URL
-    ? env.AWS_CLOUDFRONT_URL
-    : `https://${env.AWS_S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com`;
-
-  return `${bucketUrl}/${toS3Key(key)}`;
+interface CreatePresignedUploadParams {
+  key: string;
+  contentType: string;
 }
 
-export async function createPresignedUpload(params: { key: string; contentType: string }) {
-  const s3Key = toS3Key(params.key);
+export async function createPresignedUpload(params: CreatePresignedUploadParams) {
+  const key = params.key;
+
   const { url, fields } = await createPresignedPost(s3, {
     Bucket: env.AWS_S3_BUCKET,
-    Key: s3Key,
+    Key: key,
     Fields: {
       "Content-Type": params.contentType,
     },
     Conditions: [
-      ["eq", "$Content-Type", params.contentType],
       ["content-length-range", 1, MAX_UPLOAD_SIZE_BYTES],
     ],
     Expires: PRESIGNED_URL_TTL,
   });
 
   return {
-    key: params.key,
+    key,
     uploadUrl: url,
     fields,
-    publicUrl: buildPublicUrl(params.key),
+    publicUrl: buildPublicUrl(key),
     expiresIn: PRESIGNED_URL_TTL,
     maxSizeBytes: MAX_UPLOAD_SIZE_BYTES,
   };

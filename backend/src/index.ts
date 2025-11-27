@@ -5,7 +5,9 @@ import { env } from "./config.ts";
 import { attachUser } from "./middlewares/auth.ts";
 import { errorHandler } from "./middlewares/errorHandler.ts";
 import authRouter from "./routes/auth.ts";
-import photosRouter from "./routes/photos.ts";
+import placesRouter from "./routes/places.ts";
+import feedsRouter from "./routes/feeds.ts";
+import friendshipsRouter from "./routes/friendships.ts";
 
 const app = express();
 
@@ -16,13 +18,17 @@ app.use(
     credentials: true,
   }),
 );
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: `${env.MAX_UPLOAD_SIZE_MB}mb` }));
 app.use(cookieParser());
 app.use(attachUser);
 
 // Routers
 app.use("/api/auth", authRouter);
-app.use("/api/photos", photosRouter);
+app.use("/api/places", placesRouter);
+app.use("/api/feeds", feedsRouter);
+app.use("/api/friendships", friendshipsRouter);
+
+// Error handler
 app.use(errorHandler);
 
 app.listen(env.PORT, () => {

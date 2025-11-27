@@ -16,55 +16,63 @@ const credentialsSchema = z.object({
   password: z.string().min(8).max(64),
 });
 
-router.post("/register", async (req, res) => {
-  const { username, password } = credentialsSchema.parse(req.body);
-  const existingUser = await prisma.user.findUnique({ where: { username } });
+router.post("/register", async (req, res, next) => {
+  try {
+    const { username, password } = credentialsSchema.parse(req.body);
 
-  if (existingUser) {
-    return res.status(409).json({ message: "Username is already in use" });
+    const existing = await prisma.user.findUnique({
+      where: { username },
+      select: { id: true },
+    });
+
+    if (existing) {
+      return res.status(409).json({ message: "Username already taken" });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const user = await prisma.user.create({
+      data: { username, passwordHash },
+      select: { id: true, username: true, createdAt: true },
+    });
+
+    issueSession(res, { userId: user.id });
+
+    return res.status(201).json({ user });
+  } catch (err) {
+    return next(err);
   }
-
-  const passwordHash = await bcrypt.hash(password, 12);
-  const user = await prisma.user.create({
-    data: { username, passwordHash },
-    select: { id: true, username: true, createdAt: true },
-  });
-
-  issueSession(res, { userId: user.id });
-  return res.status(201).json({ user });
 });
 
-router.post("/login", async (req, res) => {
-  const { username, password } = credentialsSchema.parse(req.body);
-  const user = await prisma.user.findUnique({
-    where: { username },
-    select: { id: true, username: true, passwordHash: true, createdAt: true },
-  });
+router.post("/login", async (req, res, next) => {
+  try {
+    const { username, password } = credentialsSchema.parse(req.body);
 
-  if (!user) {
-    return res.status(401).json({ message: "Invalid username" });
+    const user = await prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    const ok = await bcrypt.compare(password, user.passwordHash);
+    if (!ok) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    issueSession(res, { userId: user.id });
+
+    return res.json({
+      user: {
+        id: user.id,
+        username: user.username,
+        createdAt: user.createdAt,
+      },
+    });
+  } catch (err) {
+    return next(err);
   }
-
-  // [실습1] Authentication
-  // TODO: 아이디와 비밀번호가 올바른 경우 JWT를 발급한 후 쿠키로 전송합니다.
-  // HINT: 비밀번호가 일치하는지 확인하려면 await bcrypt.compare(password, <DB에 저장된 해시값>)를 사용하세요.
-  // 아래에 코드를 작성하세요.
-  const passwordMatches = await bcrypt.compare(password, user.passwordHash);
-
-  if (!passwordMatches) {
-    return res.status(401).json({ message: "Invalid password" });
-  }
-
-  issueSession(res, { userId: user.id });
-
-  // 위에 코드를 작성하세요.
-  return res.json({
-    user: {
-      id: user.id,
-      username: user.username,
-      createdAt: user.createdAt,
-    },
-  });
 });
 
 router.post("/logout", requireAuth, async (_req, res) => {
