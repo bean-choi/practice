@@ -10,11 +10,11 @@ import feedsRouter from "./routes/feeds.ts";
 import friendshipsRouter from "./routes/friendships.ts";
 import dotenv from "dotenv";
 
-dotenv.config({
-  path: process.env.NODE_ENV === "production"
-    ? ".env.production"
-    : ".env.development",
-});
+// dotenv.config({
+//   path: process.env.NODE_ENV === "production"
+//     ? ".env.production"
+//     : ".env.development",
+// });
 
 const app = express();
 

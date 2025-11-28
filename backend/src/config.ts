@@ -1,16 +1,16 @@
 import { z } from "zod";
 import { config as loadEnv } from "dotenv";
 
-const NODE_ENV = process.env.NODE_ENV ?? "development";
+// const NODE_ENV = process.env.NODE_ENV ?? "development";
 
-const envFile =
-  NODE_ENV === "production"
-    ? ".env.production"
-    : NODE_ENV === "test"
-    ? ".env.test"
-    : ".env.development"; // 기본: 개발용
+// const envFile =
+//   NODE_ENV === "production"
+//     ? ".env.production"
+//     : NODE_ENV === "test"
+//     ? ".env.test"
+//     : ".env.development"; // 기본: 개발용
 
-loadEnv({ path: envFile });
+// loadEnv({ path: envFile });
 
 const envSchema = z.object({
   // General
