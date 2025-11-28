@@ -95,7 +95,7 @@ const LoginPage: React.FC = () => {
 
                 <div className="auth-footer">
                     <span className="auth-footer-text">회원이 아니신가요? </span>
-                    <Link to="/signup" className="auth-footer-link">
+                    <Link to="/register" className="auth-footer-link">
                     Register
                     </Link>
                 </div>
