@@ -38,6 +38,6 @@ app.use("/api/friendships", friendshipsRouter);
 // Error handler
 app.use(errorHandler);
 
-app.listen(env.PORT, () => {
+app.listen(env.PORT, env.HOST, () => {
   console.log(`Server is running on http://localhost:${env.PORT}`);
 });
