@@ -49,7 +49,7 @@ model Friendship {
 
 model Place {
   id          String   @id @default(cuid())
-  name        String
+  name        String   @unique
   xCoord      Int      // 캠퍼스 지도 이미지 기준 X 좌표(px)
   yCoord      Int      // 캠퍼스 지도 이미지 기준 Y 좌표(px)
   description String?
@@ -67,6 +67,7 @@ model Feed {
   imageKey   String?
   status     FeedStatus
   createdAt  DateTime    @default(now())
+  title     String   @default("")
 
   comments   Comment[]
   likes      FeedLike[]
@@ -93,4 +94,8 @@ model FeedLike {
   createdAt DateTime @default(now())
 
   @@id([userId, feedId])
+}
+
+generator dbSeed {
+  provider = "prisma-client-js"
 }
