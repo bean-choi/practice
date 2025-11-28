@@ -1,2 +1,6 @@
 // src/api.ts
-export const SAPIBase = "http://localhost:8080"; // 백엔드 주소/포트에 맞게 수정
+
+const API_BASE =
+  import.meta.env.VITE_API_BASE ?? "http://localhost:8000"; // fallback
+
+export const SAPIBase = API_BASE;

@@ -1,0 +1,215 @@
+/* 오른쪽 맵 영역 */
+.map-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.map-main-inner {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 맵 이미지 + 박스 */
+.map-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  aspect-ratio: 16 / 10; /* 맵 비율에 맞게 조정 */
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+  background-color: #000;
+}
+
+.map-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 핀 */
+.map-pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.map-pin-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 2px solid #111827;
+  background-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.4);
+}
+
+.map-pin-label {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background-color: rgba(17, 24, 39, 0.85);
+  color: #f9fafb;
+  white-space: nowrap;
+}
+
+.map-pin--active .map-pin-dot {
+  background-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.4);
+}
+
+.map-pin--active .map-pin-label {
+  background-color: rgba(17, 24, 39, 1);
+}
+
+/* 텍스트 */
+.map-muted {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.map-error-text {
+  font-size: 13px;
+  color: #dc2626;
+}
+
+/* 이미지 기반 핀 */
+.map-pin-img {
+  position: absolute;
+  transform: translate(-50%, -100%); /* 핀 하단이 좌표에 맞도록 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.pin-image {
+  width: 48px;      /* 필요하면 조절 가능 */
+  height: 55px;
+  pointer-events: none; /* 클릭 영역 방해 제거 */
+}
+
+/* 흰색 원 안의 숫자 표시 */
+.pin-count {
+  position: absolute;
+  top: 14px;       /* 흰 원 중앙에 보이도록 조정 */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  pointer-events: none;
+}
+
+/* 장소별 피드 패널 */
+.map-place-panel {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 280px;
+  max-height: calc(100% - 24px);
+  background-color: rgba(255, 255, 255, 0.96);
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.35);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.map-place-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.map-place-panel-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.map-place-panel-sub {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.map-place-panel-close {
+  border: none;
+  background: none;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+.map-place-panel-close:hover {
+  background-color: #e5e7eb;
+}
+
+.map-place-panel-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* 피드 썸네일 그리드 */
+.map-feed-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.map-feed-card {
+  border: none;
+  background: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.map-feed-thumb {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #e5e7eb;
+  height: 90px;
+}
+
+.map-feed-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.map-feed-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  font-size: 11px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-feed-caption {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #111827;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

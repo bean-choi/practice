@@ -8,6 +8,13 @@ import authRouter from "./routes/auth.ts";
 import placesRouter from "./routes/places.ts";
 import feedsRouter from "./routes/feeds.ts";
 import friendshipsRouter from "./routes/friendships.ts";
+import dotenv from "dotenv";
+
+dotenv.config({
+  path: process.env.NODE_ENV === "production"
+    ? ".env.production"
+    : ".env.development",
+});
 
 const app = express();
 

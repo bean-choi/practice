@@ -3,7 +3,7 @@ services:
     image: mysql:8.4
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: gallery
+      MYSQL_DATABASE: newbie
       MYSQL_ROOT_PASSWORD: root
       TZ: Asia/Seoul
     ports:

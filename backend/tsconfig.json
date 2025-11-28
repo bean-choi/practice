@@ -4,13 +4,13 @@
     // File Layout
     "rootDir": "./src",
     "outDir": "./dist",
+    "types": ["node"],
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "node20",
     "target": "ES2023",
     "lib": ["ES2023"],
-    "types": ["node"],
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
@@ -35,5 +35,6 @@
     // Additional Options
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true
-  }
+  },
+  "exclude": ["node_modules", "dist", "prisma/seed.ts"]
 }

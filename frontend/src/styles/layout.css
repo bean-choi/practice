@@ -1,0 +1,156 @@
+/* 전체 레이아웃 */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+/* 왼쪽 사이드바 */
+.app-sidebar {
+  width: 260px;
+  max-width: 280px;
+  border-right: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 로고 영역 */
+.app-sidebar-logo {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.app-logo-text {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* 상단 메뉴 */
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.app-nav-item {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #374151;
+}
+
+.app-nav-item:hover {
+  background-color: #f3f4f6;
+}
+
+.app-nav-item--active {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+.app-nav-item--active:hover {
+  color: #374151;
+}
+
+.app-nav-label {
+  font-weight: 500;
+}
+
+/* 장소 목록 섹션 */
+.app-places-section {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.app-places-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #4b5563;
+}
+
+.app-places-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.app-place-item {
+  width: 100%;
+  text-align: left;
+  border-radius: 10px;
+  padding: 8px 10px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.app-place-item:hover {
+  background-color: #f3f4f6;
+}
+
+.app-place-item--active {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+.app-place-name {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.app-place-desc {
+  font-size: 11px;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+/* 맨 아래 로그아웃 영역 */
+.app-logout-area {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.app-logout-button {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  padding: 8px 0;
+  font-size: 13px;
+  background-color: #f9fafb;
+  cursor: pointer;
+}
+
+.app-logout-button:hover {
+  background-color: #f3f4f6;
+}
+
+/* 공통 텍스트 */
+.app-muted {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* 오른쪽 메인 영역 */
+.app-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  padding: 16px;
+}
