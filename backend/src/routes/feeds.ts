@@ -16,8 +16,8 @@ const router = Router();
 // 새 피드(포스트) 생성 요청 body 검증
 const feedCreateSchema = z.object({
   placeId: z.string().min(1),
-  content: z.string().min(1).max(2000),
-  title: z.string().min(1).max(100), 
+  content: z.string().min(1, "내용을 포함해야 합니다").max(2000, "내용은 2000자 이하여야 합니다"),
+  title: z.string().min(1, "제목을 포함해야 합니다").max(100, "제목은 100자 이하여야 합니다"), 
   status: z.nativeEnum(FeedStatus),
   imageKey: z.string().min(1).optional().nullable(),
 });
@@ -57,50 +57,57 @@ router.post("/upload-url", requireAuth, async (req, res) => {
 // 2) 새 피드(포스트) 작성
 //
 router.post("/", requireAuth, async (req, res) => {
-  const { placeId, content, title, status, imageKey } = feedCreateSchema.parse(
-    req.body
-  );
+  try{
+    const { placeId, content, title, status, imageKey } = feedCreateSchema.parse(
+      req.body
+    );
 
-  // imageKey가 넘어왔으면 실제로 S3에 있는지 한 번 확인
-  if (imageKey) {
-    const exists = await objectExists(imageKey);
-    if (!exists) {
-      return res.status(400).json({ message: "Image not found in S3" });
+    // imageKey가 넘어왔으면 실제로 S3에 있는지 한 번 확인
+    if (imageKey) {
+      const exists = await objectExists(imageKey);
+      if (!exists) {
+        return res.status(400).json({ message: "Image not found in S3" });
+      }
     }
+
+    // 존재하는 place인지 확인 (미리 정의된 장소에만 작성 가능)
+    const place = await prisma.place.findUnique({ where: { id: placeId } });
+    if (!place) {
+      return res
+        .status(400)
+        .json({
+          message: "Invalid place. You can post only to predefined places.",
+        });
+    }
+
+    // feed 생성
+    const feed = await prisma.feed.create({
+      data: {
+        authorId: req.user!.id,
+        placeId,
+        content,
+        title,
+        status,
+        imageKey: imageKey ?? null,
+      },
+      include: {
+        author: { select: { id: true, username: true } },
+      },
+    });
+
+    return res.status(201).json({
+      feed: {
+        ...feed,
+        // 응답에 imageKey 추가(프론트에서 그대로 <img src> 로 사용)
+        imageKey: feed.imageKey ? buildPublicUrl(feed.imageKey) : null,
+      },
+    });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ message: err.issues[0]!.message });
+    }
+    return res.status(500).json({ message: "Server error" });
   }
-
-  // 존재하는 place인지 확인 (미리 정의된 장소에만 작성 가능)
-  const place = await prisma.place.findUnique({ where: { id: placeId } });
-  if (!place) {
-    return res
-      .status(400)
-      .json({
-        message: "Invalid place. You can post only to predefined places.",
-      });
-  }
-
-  // feed 생성
-  const feed = await prisma.feed.create({
-    data: {
-      authorId: req.user!.id,
-      placeId,
-      content,
-      title,
-      status,
-      imageKey: imageKey ?? null,
-    },
-    include: {
-      author: { select: { id: true, username: true } },
-    },
-  });
-
-  return res.status(201).json({
-    feed: {
-      ...feed,
-      // 응답에 imageKey 추가(프론트에서 그대로 <img src> 로 사용)
-      imageKey: feed.imageKey ? buildPublicUrl(feed.imageKey) : null,
-    },
-  });
 });
 
 //
@@ -119,13 +126,24 @@ router.get("/:feedId", async (req, res) => {
         include: { author: { select: { id: true, username: true } } },
         orderBy: { createdAt: "asc" },
       },
-      _count: { select: { likes: true } },
+      likes: {
+        select: {
+          userId: true,
+        },
+      },
+      _count: {
+        select: {
+          likes: true,  // ← 여기
+        },
+      },
     },
   });
 
   if (!feed) {
     return res.status(404).json({ message: "Feed not found" });
   }
+
+  const likedByMe = feed.likes.some((like) => like.userId === viewerId);
 
   const ok = await canViewFeed(viewerId, feed.authorId, feed.status);
   if (!ok) {
@@ -136,6 +154,7 @@ router.get("/:feedId", async (req, res) => {
     feed: {
       ...feed,
       imageKey: feed.imageKey ? buildPublicUrl(feed.imageKey) : null,
+      likedByMe,
     },
   });
 });

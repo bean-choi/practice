@@ -57,6 +57,16 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     }
   }
 
+  function handleClickPlace(placeId: string) {
+    if (selectedPlaceId === placeId) {
+      // 이미 선택된 장소를 다시 클릭한 경우 → 피드 목록 페이지로 이동
+      navigate(`/places/${placeId}/feeds`);
+    } else {
+      // 새로운 장소 선택
+      onSelectPlace?.(placeId);
+    }
+  }
+
   return (
     <div className="app-layout">
       {/* 왼쪽 사이드바 */}
@@ -127,7 +137,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                         "app-place-item" +
                         (active ? " app-place-item--active" : "")
                       }
-                      onClick={() => onSelectPlace?.(place.id)}
+                      onClick={() => handleClickPlace(place.id)}
                     >
                       <div className="app-place-name">{place.name}</div>
                       {place.description && (

@@ -1,0 +1,195 @@
+/* 전체 페이지 영역 – FeedDetailPage와 비슷한 느낌 */
+.create-feed-page {
+  min-height: 80vh;
+  max-height: 95vh;
+  padding: 24px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: #f3f4f6; /* 연한 회색 배경 */
+}
+
+/* 뒤로가기 버튼 */
+.create-feed-back {
+  align-self: flex-start;
+  max-width: 720px;
+  width: 100%;
+
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.create-feed-back:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* 가운데 카드 */
+.create-feed-card {
+  max-width: 720px;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  padding: 24px 20px;
+  box-sizing: border-box;
+}
+
+/* 헤더 영역 */
+.create-feed-header {
+  margin-bottom: 20px;
+}
+
+.create-feed-place {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.create-feed-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.create-feed-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* 폼 전체 */
+.create-feed-form {
+  margin-top: 8px;
+}
+
+/* 필드 하나 */
+.create-feed-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+/* 라벨 */
+.create-feed-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+/* 인풋 / 텍스트 영역 / 셀렉트 공통 */
+.create-feed-input,
+.create-feed-textarea,
+.create-feed-select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  color: #111827;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.create-feed-input::placeholder,
+.create-feed-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.create-feed-input:focus,
+.create-feed-textarea:focus,
+.create-feed-select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb33;
+}
+
+/* textarea 높이 */
+.create-feed-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* 파일 인풋 */
+.create-feed-file-input {
+  font-size: 14px;
+}
+
+.create-feed-file-name {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* 버튼 영역 */
+.create-feed-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* 버튼 공통 */
+.create-feed-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* secondary 버튼 (취소) */
+.create-feed-btn.secondary {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.create-feed-btn.secondary:hover:not(:disabled) {
+  background-color: #d1d5db;
+}
+
+/* primary 버튼 (작성하기) – FeedDetailPage 느낌과 맞춤 */
+.create-feed-btn.primary {
+  background-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+
+.create-feed-btn.primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+/* disabled */
+.create-feed-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* 반응형 – 모바일에서 padding 축소 */
+@media (max-width: 640px) {
+  .create-feed-page {
+    padding: 16px;
+  }
+
+  .create-feed-card {
+    padding: 18px 16px;
+  }
+
+  .create-feed-title {
+    font-size: 20px;
+  }
+}

@@ -6,10 +6,11 @@ import AppLayout from "../components/AppLayout";
 import type { Place } from "../components/AppLayout";
 import type { FeedStatus } from "../types/feed";
 import type { Feed, Author } from "../types/feed";
+import { Link } from "react-router-dom";
 import "../styles/map.css";
 
-const BASE_MAP_WIDTH = 1600;  // 캠퍼스 맵 원본 이미지 가로(px)에 맞춰 수정
-const BASE_MAP_HEIGHT = 1000; // 세로(px)에 맞춰 수정
+const BASE_MAP_WIDTH = 2171;  // 캠퍼스 맵 원본 이미지 가로(px)에 맞춰 수정
+const BASE_MAP_HEIGHT = 1713; // 세로(px)에 맞춰 수정
 
 
 const DEFAULT_STATUS: FeedStatus = "PUBLIC";
@@ -185,6 +186,10 @@ const MapPage: React.FC = () => {
     setSelectedPlaceId(placeId);
   }
 
+  function handleClickFeedCard(feedId: string) {
+    navigate(`/feeds/${feedId}`);
+  }
+
 
   return (
     <AppLayout
@@ -199,48 +204,47 @@ const MapPage: React.FC = () => {
           {error && <p className="map-error-text">{error}</p>}
 
           {!loading && !error && (
-            <div className="map-image-wrapper">
-              <img src="/campus-map.png" alt="Campus map" className="map-image" />
+            <div className="map-outer">
+              <div className="map-image-wrapper">
+                <img src="/campus-map.png" alt="Campus map" className="map-image" />
 
-              {places.map((place) => {
-                const leftPercent = (place.xCoord / BASE_MAP_WIDTH) * 100;
-                const topPercent = (place.yCoord / BASE_MAP_HEIGHT) * 100;
+                {places.map((place) => {
+                  const leftPercent = (place.xCoord / BASE_MAP_WIDTH) * 100;
+                  const topPercent = (place.yCoord / BASE_MAP_HEIGHT) * 100;
 
-                const active = place.id === selectedPlaceId;
+                  const active = place.id === selectedPlaceId;
 
-                const pinSrc = active ? "/pin-active.png" : "/pin-nonactive.png";
+                  const pinSrc = active ? "/pin-active.png" : "/pin-nonactive.png";
 
-                return (
-                  <button
-                    key={place.id}
-                    type="button"
-                    className="map-pin-img"
-                    style={{
-                      left: `${leftPercent}%`,
-                      top: `${topPercent}%`,
-                    }}
-                    onClick={() => {
-                      handleSelectPlace(place.id);
-                      setIsPanelOpen(true);
-                    }}
-                  >
-                    <img src={pinSrc} className="pin-image" alt="pin" />
+                  return (
+                    <button
+                      key={place.id}
+                      type="button"
+                      className="map-pin-img"
+                      style={{
+                        left: `${leftPercent}%`,
+                        top: `${topPercent}%`,
+                      }}
+                      onClick={() => {
+                        handleSelectPlace(place.id);
+                        setIsPanelOpen(true);
+                      }}
+                    >
+                      <img src={pinSrc} className="pin-image" alt="pin" />
 
-                    {/* 숫자 표시 (흰 원 안에 들어감) */}
-                    <span className="pin-count">
-                      {recentCounts[place.id] ?? 0}
-                    </span>
-                  </button>
-                );
-              })}
-              
+                      {/* 숫자 표시 (흰 원 안에 들어감) */}
+                      <span className="pin-count">
+                        {recentCounts[place.id] ?? 0}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
               {isPanelOpen && selectedPlace && (
                 <div className="map-place-panel">
                   <div className="map-place-panel-header">
                     <div>
-                      <div className="map-place-panel-title">
-                        {selectedPlace.name}
-                      </div>
+                      <Link to={`/places/${selectedPlaceId}/feeds`} >{selectedPlace.name}</Link>
                       <div className="map-place-panel-sub">
                         최근 24시간 게시물 {feeds.length}개
                       </div>
@@ -272,12 +276,13 @@ const MapPage: React.FC = () => {
                             type="button"
                             key={feed.id}
                             className="map-feed-card"
+                            onClick={() => handleClickFeedCard(feed.id)}
                           >
                             <div className="map-feed-thumb">
                               {feed.imageKey ? (
                                 <img
                                   src={feed.imageKey}
-                                  alt="feed"
+                                  alt={feed.title}
                                   className="map-feed-thumb-img"
                                 />
                               ) : (
