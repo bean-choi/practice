@@ -7,6 +7,8 @@ import MapPage from "./pages/MapPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import GuestOnlyRoute from "./components/GuestOnlyRoute"
 import CreateFeedPage from "./pages/CreateFeedPage.tsx";
+import FeedDetailPage from "./pages/FeedDetailPage.tsx";
+import PlaceFeedListPage from "./pages/PlaceFeedListPage.tsx";
 
 function App() {
   return (
@@ -41,6 +43,22 @@ function App() {
         element={
           <ProtectedRoute>
             <CreateFeedPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/feeds/:feedId"
+        element={
+          <ProtectedRoute>
+            <FeedDetailPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/places/:placeId/feeds"
+        element={
+          <ProtectedRoute>
+            <PlaceFeedListPage />
           </ProtectedRoute>
         }
       />

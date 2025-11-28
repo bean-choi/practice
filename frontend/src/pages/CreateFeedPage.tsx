@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import { SAPIBase } from "../api";
 import type { FeedStatus } from "../types/feed";
+import "../styles/create-feed.css";
 
 interface Place {
   id: string;
@@ -159,98 +160,113 @@ const CreateFeedPage: React.FC = () => {
       places={places}
       selectedPlaceId={selectedPlaceId}
       onSelectPlace={handleSelectPlace}
-      // 이 페이지에서는 Create 버튼을 다시 눌러도 현재 페이지니까, 굳이 다른 동작 필요 없음.
-      // 필요하면 () => {} 넘겨도 되고 생략해도 됩니다(선언에 따라).
+      onClickCreate={() => {
+        // 이미 작성 페이지이므로 특별한 동작 없이 현재 페이지 유지
+      }}
     >
-      <div className="create-page">
-        <h1 className="page-title">새 피드 작성</h1>
+      <div className="create-feed-page">
+        <button
+          type="button"
+          className="create-feed-back"
+          onClick={() => navigate(-1)}
+          disabled={isSubmitting}
+        >
+          ← 뒤로가기
+        </button>
 
-        <p className="page-subtitle">
-          왼쪽에서 장소를 선택한 뒤, 아래 폼을 작성하세요.
-        </p>
+        <div className="create-feed-card">
+          <header className="create-feed-header">
+            <div className="create-feed-place">
+              {selectedPlace
+                ? selectedPlace.name
+                : "장소를 선택해 새 피드를 작성하세요."}
+            </div>
+            <h1 className="create-feed-title">새 피드 작성</h1>
+            <p className="create-feed-subtitle">
+              이 장소에 대한 제목과 내용을 작성하고, 필요한 경우 이미지를
+              첨부해 보세요.
+            </p>
+          </header>
 
-        <div className="selected-place-box">
-          <span>선택된 장소: </span>
-          {selectedPlace ? (
-            <strong>{selectedPlace.name}</strong>
-          ) : (
-            <span className="text-muted">선택된 장소 없음</span>
-          )}
-        </div>
-
-        <form className="create-form" onSubmit={handleSubmit}>
-          {/* 내용 */}
-          <label className="form-field">
-            <span className="form-label">제목</span>
-            <input
+          <form className="create-feed-form" onSubmit={handleSubmit}>
+            {/* 제목 */}
+            <div className="create-feed-field">
+              <label className="create-feed-label">제목</label>
+              <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="form-input"
+                className="create-feed-input"
                 placeholder="피드 제목을 입력하세요."
-            />
-            <span className="form-label">내용</span>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              rows={5}
-              className="form-textarea"
-              placeholder="이 장소에서의 이야기를 적어주세요."
-            />
-          </label>
+              />
+            </div>
 
-          {/* 공개 범위 */}
-          <label className="form-field">
-            <span className="form-label">공개 범위</span>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as FeedStatus)}
-              className="form-select"
-            >
-              <option value="PUBLIC">전체 공개</option>
-              <option value="FRIENDS">친구 공개</option>
-              <option value="PRIVATE">비공개</option>
-            </select>
-          </label>
+            {/* 내용 */}
+            <div className="create-feed-field">
+              <label className="create-feed-label">내용</label>
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                rows={6}
+                className="create-feed-textarea"
+                placeholder="이 장소에서의 이야기를 자유롭게 적어주세요."
+              />
+            </div>
 
-          {/* 이미지 */}
-          <label className="form-field">
-            <span className="form-label">이미지 (선택)</span>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="form-input-file"
-            />
-            {file && (
-              <div className="form-file-name">
-                선택된 파일: <strong>{file.name}</strong>
-              </div>
-            )}
-          </label>
+            {/* 공개 범위 */}
+            <div className="create-feed-field">
+              <label className="create-feed-label">공개 범위</label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value as FeedStatus)}
+                className="create-feed-select"
+              >
+                <option value="PUBLIC">전체 공개</option>
+                <option value="FRIENDS">친구 공개</option>
+                <option value="PRIVATE">비공개</option>
+              </select>
+            </div>
 
-          {/* 버튼 */}
-          <div className="form-actions">
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => navigate(-1)}
-              disabled={isSubmitting}
-            >
-              취소
-            </button>
-            <button
-              type="submit"
-              className="btn-primary"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "작성 중..." : "작성하기"}
-            </button>
-          </div>
-        </form>
+            {/* 이미지 업로드 */}
+            <div className="create-feed-field">
+              <label className="create-feed-label">이미지 (선택)</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="create-feed-file-input"
+              />
+              {file && (
+                <div className="create-feed-file-name">
+                  선택된 파일: <strong>{file.name}</strong>
+                </div>
+              )}
+            </div>
+
+            {/* 버튼 영역 */}
+            <div className="create-feed-actions">
+              <button
+                type="button"
+                className="create-feed-btn secondary"
+                onClick={() => navigate(-1)}
+                disabled={isSubmitting}
+              >
+                취소
+              </button>
+              <button
+                type="submit"
+                className="create-feed-btn primary"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "작성 중..." : "작성하기"}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </AppLayout>
   );
+
 };
 
 export default CreateFeedPage;

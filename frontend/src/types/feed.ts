@@ -1,4 +1,4 @@
-export type FeedStatus = "PUBLIC" | "FRIEND" | "CLOSE_FRIEND";
+export type FeedStatus = "PUBLIC" | "FRIEND" | "PRIVATE";
 
 export interface Author {
   id: string;
