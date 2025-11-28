@@ -22,7 +22,7 @@ function App() {
         }
       />
       <Route
-        path="/signup"
+        path="/register"
         element={
           <GuestOnlyRoute>
             <SignUpPage />
