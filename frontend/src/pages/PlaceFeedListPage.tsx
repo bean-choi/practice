@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import { SAPIBase } from "../api";
-import type { Feed, FeedStatus } from "../types/feed";
+import type { Feed } from "../types/feed";
 import "../styles/feed-list.css";
 
 interface Place {

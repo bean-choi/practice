@@ -4,16 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { SAPIBase } from "../api";
 import AppLayout from "../components/AppLayout";
 import type { Place } from "../components/AppLayout";
-import type { FeedStatus } from "../types/feed";
-import type { Feed, Author } from "../types/feed";
+import type { Feed } from "../types/feed";
 import { Link } from "react-router-dom";
 import "../styles/map.css";
 
 const BASE_MAP_WIDTH = 2171;  // 캠퍼스 맵 원본 이미지 가로(px)에 맞춰 수정
 const BASE_MAP_HEIGHT = 1713; // 세로(px)에 맞춰 수정
-
-
-const DEFAULT_STATUS: FeedStatus = "PUBLIC";
 
 const MapPage: React.FC = () => {
   const navigate = useNavigate();
